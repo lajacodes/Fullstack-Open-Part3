@@ -1,7 +1,13 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 
+morgan.token('data', req =>  {
+    return JSON.stringify(req.body)
+}) 
+app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :data'))
 
 persons = [
     { 
@@ -25,6 +31,7 @@ persons = [
       "number": "39-23-6423122"
     }
 ]
+
 
 app.get('/api/persons', (req, res) => 
     res.send(persons))
@@ -56,7 +63,10 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 
-app.use(express.json())
+
+
+
+
 
  const generateId = () => {
   const highest = persons.length > 0 
@@ -65,7 +75,7 @@ app.use(express.json())
    return highest + 1
 }
 
-app.post('/api/persons/', (req, res)=> {
+app.post('/api/persons',  (req, res)=> {
     const body = req.body
 
     if(!body.name || !body.number){
@@ -88,7 +98,8 @@ app.post('/api/persons/', (req, res)=> {
 })
 
 
+
 const PORT = 3005
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+console.log(`Server running on http://localhost:${PORT}`)
 })                                      
