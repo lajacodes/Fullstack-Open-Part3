@@ -3,7 +3,7 @@ GET http://localhost:3005/api/persons
 
 
 ###
-DELETE  http://localhost:3005/api/persons/2
+DELETE  http://localhost:3005/api/persons/3
 
 ###
 POST http://localhost:3005/api/persons 
@@ -11,6 +11,6 @@ content-type: application/json
 
 {
     "id": "generateId()",
-    "name": "laj",
+    "name": "laja olowo",
     "number":"08075115837"
 }
