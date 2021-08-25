@@ -11,6 +11,6 @@ content-type: application/json
 
 {
     "id": "generateId()",
-    "name": "laja olowo",
+    "name": "laja money",
     "number":"08075115837"
 }
