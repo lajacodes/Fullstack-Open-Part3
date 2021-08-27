@@ -16,34 +16,27 @@ mongoose.connect(url, {
   useUnifiedTopology: true,
 });
 
-const noteSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minLength: 4,
-    required: true,
-  },
-  number: {
-    type: Number,
-    minLength: 8,
-    required: true,
-  },
+const personSchema = new mongoose.Schema({
+  name: String,
+  number: String,
 });
 
-const Person = mongoose.model("Person", noteSchema);
+const Person = mongoose.model("Person", personSchema);
 
-const person = new Person({
-  name: "Arto Helas",
-  number: 123456,
-});
-
-person.save().then((result) => {
-  console.log(`added ${person} to phonebook`);
-  mongoose.connection.close();
-});
-
-Person.find({ required: false }).then((result) => {
-  result.forEach((person) => {
-    console.log(person);
+if (process.argv.length === 3) {
+  console.log("Phonebook:");
+  Person.find({}).then((result) => {
+    result.forEach((person) => console.log(person.name, person.number));
     mongoose.connection.close();
   });
-});
+} else {
+  const person = new Person({
+    name: process.argv[3],
+    number: process.argv[4],
+  });
+
+  person.save().then(() => {
+    console.log(`added ${person.name} number ${person.number} to phonebook`);
+    mongoose.connection.close();
+  });
+}

@@ -39,6 +39,11 @@ persons = [
 ];
 
 app.get("/api/persons", (req, res) => res.send(persons));
+// app.get("/api/persons", (request, response) => {
+//   Person.find({}).then((persons) => {
+//     response.json(persons);
+//   });
+// });
 
 app.get("/info", (request, response) => {
   let length = persons.length;
