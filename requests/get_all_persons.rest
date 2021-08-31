@@ -10,6 +10,6 @@ POST http://localhost:3050/api/persons
 content-type: application/json
                                                                   
 {
-    "name": "la codess",
-    "number":"08075115867"  
+    "name": "pityy",
+    "number":"08008767"  
 }
