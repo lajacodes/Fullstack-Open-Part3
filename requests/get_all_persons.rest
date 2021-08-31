@@ -1,16 +1,15 @@
-GET http://localhost:3005/api/persons
+GET http://localhost:3050/api/persons
 
 
 
 ###
-DELETE  http://localhost:3005/api/persons/2
+DELETE  http://localhost:3050/api/persons/612b86aee2b5af366a4b7b00
 
 ###
-POST http://localhost:3005/api/persons 
+POST http://localhost:3050/api/persons 
 content-type: application/json
-
+                                                                  
 {
-    "id": "generateId()",
-    "name": "laja money",
-    "number":"08075115837"
+    "name": "la codess",
+    "number":"08075115867"  
 }

@@ -3,6 +3,8 @@ const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
 const { port } = require("./config");
+const Person = require("./models/person");
+// const { Mongoose } = require("mongoose");
 
 console.log({ argV: process.argv });
 app.use(express.static("build"));
@@ -15,87 +17,91 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :data")
 );
 
-persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
 
-app.get("/api/persons", (req, res) => res.send(persons));
-// app.get("/api/persons", (request, response) => {
-//   Person.find({}).then((persons) => {
-//     response.json(persons);
-//   });
-// });
+app.get("/api/persons", (req, res) => {
+  Person.find({}).then((persons) => {
+    res.send(persons);
+  });
+});
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+
+  if (!body.name && !body.number) {
+    return res.status(204).json({
+      error: "content missing",
+    });
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+  person.save().then((personSaved) => {
+    res.json(personSaved);
+  });
+});
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+
+  const updatePerson = {
+    name: body.name,
+    number: body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, updatePerson, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson);
+    })
+    .catch((error) => next(error));
+});
+
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
+});
+
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then((result) => {
+      response.status(204).end();
+    })
+    .catch((error) => next(error));
+});
 
 app.get("/info", (request, response) => {
-  let length = persons.length;
+  let length = Person.length;
   response.send(`
   <p>Phonebook has info for ${length} people</p>
   ${new Date()}`);
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  console.log(id);
-  const person = persons.find((pers) => pers.id === id);
-  if (person) {
-    return res.json(person);
-  } else {
-    return res.status(404).end();
-  }
+app.get("/ok", (req, res) => {
+  res.send("<h1>This is the Phonebook server</h1>");
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  persons = persons.filter((pers) => pers.id !== id);
-  res.status(204).end();
-});
-
-const generateId = () => {
-  const highest =
-    persons.length > 0 ? Math.max(...persons.map((per) => per.id)) : 0;
-  return highest + 1;
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
 };
 
-app.post("/api/persons", (req, res) => {
-  const body = req.body;
+app.use(unknownEndpoint);
 
-  if (!body.name || !body.number) {
-    return res.status(204).json({
-      error: "content missing",
-    });
-  } else if (persons.find((per) => per.name === body.name)) {
-    res.status(409).json({
-      error: "name must be unique",
-    });
-  }
-  const person = {
-    id: generateId(),
-    name: body.name,
-    number: body.number,
-  };
-
-  persons = persons.concat(person);
-  res.json(person);
-});
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
