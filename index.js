@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
-const { port } = require("./config");
+const { PORT } = require("./config");
 const Person = require("./models/person");
 const { deleteOne } = require("./models/person");
 // const { Mongoose } = require("mongoose");
@@ -123,6 +123,6 @@ app.use(unknownEndpoint);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
