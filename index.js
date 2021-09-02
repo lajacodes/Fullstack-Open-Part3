@@ -33,7 +33,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
-    res.send(persons);
+    return res.send(persons);
   });
 });
 
