@@ -1,15 +1,14 @@
 GET http://localhost:3050/api/persons
 
 
-
 ###
-DELETE  http://localhost:3050/api/persons/612b86aee2b5af366a4b7b00
+DELETE  http://localhost:3050/api/persons/6130357433c820733
 
 ###
 POST http://localhost:3050/api/persons 
 content-type: application/json
                                                                   
 {
-    "name": "pityy",
-    "number":"08008767"  
+    "name": "goodd okytraysd",
+    "number":"08008767975778"  
 }

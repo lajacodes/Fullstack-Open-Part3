@@ -4,14 +4,17 @@ const app = express();
 const cors = require("cors");
 const { port } = require("./config");
 const Person = require("./models/person");
+const { deleteOne } = require("./models/person");
 // const { Mongoose } = require("mongoose");
 
 console.log({ argV: process.argv });
 app.use(express.static("build"));
 app.use(cors());
+
 morgan.token("data", (req) => {
   return JSON.stringify(req.body);
 });
+
 app.use(express.json());
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :data")
@@ -56,16 +59,19 @@ app.post("/api/persons", (req, res, next) => {
 });
 
 app.put("/api/persons/:id", (request, response, next) => {
-  const body = request.body;
+  const update = request.body;
 
   const updatePerson = {
-    name: body.name,
-    number: body.number,
+    name: update.name,
+    number: update.number,
   };
 
-  Person.findByIdAndUpdate(request.params.id, updatePerson, { new: true })
+  Person.findByIdAndUpdate(request.params.id, updatePerson, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatedPerson) => {
-      response.json(updatedPerson);
+      response.send(updatedPerson);
     })
     .catch((error) => next(error));
 });
@@ -82,17 +88,25 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then((result) => {
-      response.status(204).end();
+app.delete("/api/persons/:id", (req, res, next) => {
+  const deleteId = req.params.id;
+  Person.findByIdAndRemove(deleteId)
+    .then((deleteOne) => {
+      if (deleteOne) res.status(204).end();
+      else res.status(409).send({ error: "id not found" });
     })
     .catch((error) => next(error));
 });
+// app.delete("/api/persons/:id", (req, res, next) => {
+//   const deleteId = request.params.id;
+//   Person.findByIdAndRemove(deleteId)
+//     .then((result) => res.status(204).end())
+//     .catch((error) => next(error));
+// });
 
-app.get("/info", (request, response) => {
+app.get("/info", (req, res) => {
   let length = Person.length;
-  response.send(`
+  res.send(`
   <p>Phonebook has info for ${length} people</p>
   ${new Date()}`);
 });

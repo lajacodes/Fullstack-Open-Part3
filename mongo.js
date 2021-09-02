@@ -36,7 +36,7 @@
 //   });
 
 //   person.save().then(() => {
-//     console.log(`added ${person.name} number ${person.number} to phonebook`);
+//     console.log(`added ${person.name} number ${person.number} to phonebook`)
 //     mongoose.connection.close();
 //   });
 // }
@@ -47,6 +47,7 @@
 //       error: "name must be unique",
 //     });
 //   }
+
 // const generateId = () => {
 //   const highest =
 //     persons.length > 0 ? Math.max(...persons.map((per) => per.id)) : 0;
