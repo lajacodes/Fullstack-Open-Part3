@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const { PORT } = require("./config");
 const Person = require("./models/person");
-const { Person } = require("./models/person");
+// const { Person } = require("./models/person");
 // const { Mongoose } = require("mongoose");
 
 console.log({ argV: process.argv });
@@ -33,7 +33,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
-    return res.send(persons);
+    res.send(persons);
   });
 });
 
