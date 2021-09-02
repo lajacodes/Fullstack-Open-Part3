@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const { PORT } = require("./config");
 const Person = require("./models/person");
-const { deleteOne } = require("./models/person");
+const { Person } = require("./models/person");
 // const { Mongoose } = require("mongoose");
 
 console.log({ argV: process.argv });
