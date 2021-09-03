@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 module.exports = {
   env: {
     browser: true,
@@ -9,7 +10,8 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
-    indent: ["error", 4],
+    indent: ["error", 2],
+    eqeqeq: "error",
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     semi: ["error", "never"],

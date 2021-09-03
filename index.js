@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
@@ -7,6 +8,7 @@ const Person = require("./models/person");
 // const { Person } = require("./models/person");
 // const { Mongoose } = require("mongoose");
 
+// eslint-disable-next-line no-undef
 console.log({ argV: process.argv });
 app.use(express.static("build"));
 app.use(cors());
@@ -97,12 +99,6 @@ app.delete("/api/persons/:id", (req, res, next) => {
     })
     .catch((error) => next(error));
 });
-// app.delete("/api/persons/:id", (req, res, next) => {
-//   const deleteId = request.params.id;
-//   Person.findByIdAndRemove(deleteId)
-//     .then((result) => res.status(204).end())
-//     .catch((error) => next(error));
-// });
 
 app.get("/info", (req, res) => {
   let length = Person.length;
